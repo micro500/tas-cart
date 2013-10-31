@@ -8,35 +8,24 @@ entity TAS_Cart is
            RW   : in STD_LOGIC;
 			  M2   : in STD_LOGIC;
 			  CONSOLE_CE : in STD_LOGIC;
-			  CART_CE : out STD_LOGIC;
-			  LED1 : out STD_LOGIC
+			  CART_CE : out STD_LOGIC
+--			  LED1 : out STD_LOGIC
 			  );
 end TAS_Cart;
 
 architecture Behavioral of TAS_Cart is
-	signal counter : integer range 0 to 959 := 0;
-	signal led_output : std_logic := '0';
-	signal chip_select : std_logic := '1';
---	signal data_output : std_logic_vector (7 downto 0) := "ZZZZZZZZ";
+--	signal counter : integer range 0 to 959 := 0;
+--	signal led_output : std_logic := '0';
    signal cart_disabled : std_logic := '0';
 begin
 
-LED1 <= led_output;
---DATA <= data_output;
+--LED1 <= led_output;
 
 flash_led: process(M2)
 	begin
 		if (rising_edge(M2)) then
-			if ('1' & ADDR = x"FFFB") then
-				if (counter = 958) then
-					cart_disabled <= '1';
---					data_output <= "10000010";
-					led_output <= NOT led_output;
-					counter <= 0;
-				else
-					cart_disabled <= '0';
-					counter <= counter + 1;
-				end if;
+			if ('1' & ADDR = x"FFFA" or '1' & ADDR = x"FFFB") then
+				cart_disabled <= '1';
 			else
 				cart_disabled <= '0';
 			end if;
@@ -46,7 +35,8 @@ flash_led: process(M2)
 CART_CE <= CONSOLE_CE when cart_disabled = '0' else
 			  '1';
 
-DATA <= "10000000" when cart_disabled = '1' and RW = '1' else --CONSOLE_CE = '0' and '1' & ADDR = x"FFFB" and RW = '1') else
+DATA <= "10000010" when (cart_disabled = '1' and not CONSOLE_CE & ADDR = x"FFFA" and RW = '1') else
+        "10000000" when (cart_disabled = '1' and not CONSOLE_CE & ADDR = x"FFFB" and RW = '1') else
         "ZZZZZZZZ";
 
 end Behavioral;
