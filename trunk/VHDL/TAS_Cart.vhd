@@ -62,12 +62,12 @@ flash_led: process(M2)
 		end if;
 	end process;
 
-CART_CE <= '1' when (injecting = '1' and ('1' & ADDR = x"FFFA" or '1' & ADDR = x"FFFB" or '1' & ADDR = x"8000")) else
+CART_CE <= '1' when (injecting = '1' and (ADDR = x"8082")) else
            CONSOLE_CE;
 
-DATA <= "01000000" when (injecting = '1' and '1' & ADDR = x"8000" and RW = '1') else
-        "00000000" when (injecting = '1' and not CONSOLE_CE & ADDR = x"FFFA" and RW = '1') else
-        "10000000" when (injecting = '1' and not CONSOLE_CE & ADDR = x"FFFB" and RW = '1') else
+DATA <= "01000000" when (injecting = '1' and '1' & ADDR = x"8082" and RW = '1') else
+        --"00000000" when (injecting = '1' and not CONSOLE_CE & ADDR = x"FFFA" and RW = '1') else
+        --"10000000" when (injecting = '1' and not CONSOLE_CE & ADDR = x"FFFB" and RW = '1') else
         --"10000010" when (injecting = '0' and not CONSOLE_CE & ADDR = x"FFFA" and RW = '1') else
         --"10000000" when (injecting = '0' and not CONSOLE_CE & ADDR = x"FFFB" and RW = '1') else
         "ZZZZZZZZ";
