@@ -9,8 +9,7 @@ entity TAS_Cart is
 			  M2   : in STD_LOGIC;
 			  CONSOLE_CE : in STD_LOGIC;
 			  CART_CE : out STD_LOGIC;
-			  UART_RX : in STD_LOGIC;
-			  LED1 : out STD_LOGIC
+			  UART_RX : in STD_LOGIC
 			  );
 end TAS_Cart;
 
@@ -20,8 +19,7 @@ architecture Behavioral of TAS_Cart is
            rx_data_was_recieved : in STD_LOGIC;
            rx_byte_waiting : out STD_LOGIC;
            clk : in  STD_LOGIC;
-			  rx_in : in STD_LOGIC;
-			  LED : out STD_LOGIC);
+			  rx_in : in STD_LOGIC);
 	end component;
 
 --	signal counter : integer range 0 to 959 := 0;
@@ -37,8 +35,7 @@ uart1: UART port map (rx_data_out => data_from_uart,
 							 rx_data_was_recieved => uart_data_recieved,
 							 rx_byte_waiting => uart_byte_waiting,
 							 clk => CLK,
-							 rx_in => UART_RX,
-							 LED => LED1);
+							 rx_in => UART_RX);
 
 
 
@@ -49,11 +46,11 @@ flash_led: process(M2)
 			if ('1' & ADDR = x"FFFA") then
 				-- On the first NMI address read, toggle our state
 				if (uart_byte_waiting = '1') then
-					--if (data_from_uart = x"31") then
+					if (data_from_uart = x"31") then
 						injecting <= '0';
-					--else
-					--	injecting <= '1';
-					--end if;
+					else
+						injecting <= '1';
+					end if;
 					uart_data_recieved <= '1';
 				else
 					injecting <= '1';

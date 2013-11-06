@@ -6,14 +6,13 @@ entity UART is
            rx_data_was_recieved : in STD_LOGIC;
            rx_byte_waiting : out STD_LOGIC;
            clk : in  STD_LOGIC;
-			  rx_in : in STD_LOGIC;
-			  LED : out STD_LOGIC);
+			  rx_in : in STD_LOGIC);
 end UART;
 
 architecture Behavioral of UART is
 	signal rx_bit_buffer : std_logic_vector (39 downto 0) := (others => '1');
 	signal rx_baud : std_logic := '0';
-	signal rx_baud_counter : integer range 0 to 406;
+	signal rx_baud_counter : integer range 0 to 813;
 	
 	signal rx_data : STD_LOGIC_VECTOR (7 downto 0) := (others => '1');
 	
@@ -38,7 +37,7 @@ rx_ack: process (clk)
 rx: process (clk)
 	begin
 		if (rising_edge(clk)) then
-			if (rx_baud_counter = 406) then
+			if (rx_baud_counter = 813) then
 				if (rx_bit_buffer(38 downto 37) = "11" and
 					 rx_bit_buffer(34) = rx_bit_buffer(33) and
 					 rx_bit_buffer(30) = rx_bit_buffer(29) and
@@ -68,7 +67,6 @@ rx: process (clk)
 	
 -- new_byte_waiting
 rx_byte_waiting <= new_byte_waiting_for_external;
-LED <= new_byte_waiting_for_external;
 
 -- data out
 rx_data_out <= rx_data;
