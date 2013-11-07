@@ -78,8 +78,8 @@ flash_led: process(M2)
 
 send_time_digit: process(M2)
 	begin
-		if (rising_edge(M2)) then
-			if ('0' & ADDR = x"0F7A" and uart_buffer_full = '0') then
+		if (falling_edge(M2)) then
+			if (not CONSOLE_CE & ADDR = x"07FA" and RW = '0' and uart_buffer_full = '0') then
 				data_to_uart <= "0011" & DATA(3 downto 0);
 				uart_write <= '1';
 			else
