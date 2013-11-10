@@ -35,4 +35,4 @@ NET M2             LOC="P134" | IOSTANDARD=LVTTL;  # jumper wire!
 NET CONSOLE_CE     LOC="P58"  | IOSTANDARD=LVTTL; # Active low
 NET CART_CE        LOC="P55"  | IOSTANDARD=LVTTL; # Active low
 
-#NET LED1           LOC="P112" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=SLOW;          # LED1
+NET LED1           LOC="P112" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=SLOW;          # LED1
