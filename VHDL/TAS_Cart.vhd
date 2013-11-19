@@ -212,10 +212,10 @@ save_state_proc: process(savestate_state, save_state_requested, NMI_Trigger, don
 NMI_Trigger <= '1' when (not CONSOLE_CE & ADDR = x"FFFA" and M2 = '1' and RW = '1') else
 					'0';
 
-done_saving_state <= '1' when (savestate_state = SAVING and not CONSOLE_CE & ADDR = x"9024" and RW = '1' and M2 = '1') else
+done_saving_state <= '1' when (savestate_state = SAVING and not CONSOLE_CE & ADDR = x"902C" and RW = '1') else
 							'0';
 							
-finish_sending_state <= '1' when ((savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2) and not CONSOLE_CE & ADDR = x"902B" and RW = '1') else
+finish_sending_state <= '1' when ((savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2) and not CONSOLE_CE & ADDR = x"903D" and RW = '1') else
 								'0';
 
 save_sender: process (CLK)
@@ -318,7 +318,25 @@ CART_CE <= '1' when (injecting = '1' and (not CONSOLE_CE & ADDR = x"FFFA" or
 														  not CONSOLE_CE & ADDR = x"9027" or
 														  not CONSOLE_CE & ADDR = x"9028" or
 														  not CONSOLE_CE & ADDR = x"9029" or
-														  not CONSOLE_CE & ADDR = x"902A")
+														  not CONSOLE_CE & ADDR = x"902A" or
+														  not CONSOLE_CE & ADDR = x"902B" or
+														  not CONSOLE_CE & ADDR = x"902C" or
+														  not CONSOLE_CE & ADDR = x"902D" or
+														  not CONSOLE_CE & ADDR = x"902E" or
+														  not CONSOLE_CE & ADDR = x"902F" or
+														  not CONSOLE_CE & ADDR = x"9030" or
+														  not CONSOLE_CE & ADDR = x"9031" or
+														  not CONSOLE_CE & ADDR = x"9032" or
+														  not CONSOLE_CE & ADDR = x"9033" or
+														  not CONSOLE_CE & ADDR = x"9034" or
+														  not CONSOLE_CE & ADDR = x"9035" or
+														  not CONSOLE_CE & ADDR = x"9036" or
+														  not CONSOLE_CE & ADDR = x"9037" or
+														  not CONSOLE_CE & ADDR = x"9038" or
+														  not CONSOLE_CE & ADDR = x"9039" or
+														  not CONSOLE_CE & ADDR = x"903A" or
+														  not CONSOLE_CE & ADDR = x"903B" or
+														  not CONSOLE_CE & ADDR = x"903C")
 														and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) )) or (injecting = '1' and not CONSOLE_CE & ADDR(14 downto 11) = "10000" and RW = '0') else
            CONSOLE_CE;
 
@@ -327,65 +345,83 @@ DATA <= "00000000" when (injecting = '1' and not CONSOLE_CE & ADDR = x"FFFA" and
 		  
 --        x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9000" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
 --		  x"40"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9001" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- RTI
-		  
-		  
-		  
-		  x"A0"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9000" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDY #$FF
-		  x"FF"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9001" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"A9"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9002" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDA #$00
-		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9003" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"8D"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9004" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA $0004
-		  x"04"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9005" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+
+		  x"AD"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9000" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDA $0778
+		  x"78"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9001" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"07"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9002" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"29"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9003" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- AND #$7F
+		  x"7F"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9004" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"8D"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9005" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA $2000
 		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9006" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"A2"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9007" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDX #$87
-		  x"87"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9008" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"8E"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9009" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STX $0005
-		  x"05"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"20"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9007" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+
+		  x"A0"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9008" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDY #$FF
+		  x"FF"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9009" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"A9"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDA #$00
 		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900B" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"A2"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900C" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDX #$07
-		  x"07"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900D" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"8D"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900E" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA $0006
-		  x"06"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900F" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9010" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else 
-		  x"8E"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9011" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STX $0007 (loop start)
-		  x"07"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9012" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"8D"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900C" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA $0004
+		  x"04"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900D" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900E" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"A2"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"900F" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDX #$87
+		  x"87"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9010" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"8E"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9011" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STX $0005
+		  x"05"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9012" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
 		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9013" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"B1"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9014" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDA ($06),Y (loop2)
-		  x"06"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9015" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"A2"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9014" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDX #$07
+		  x"07"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9015" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"8D"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9016" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA $0006
+		  x"06"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9017" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9018" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else 
+		  x"8E"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9019" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STX $0007 (loop start)
+		  x"07"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901B" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"B1"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901C" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDA ($06),Y (loop2)
+		  x"06"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901D" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
 		  
-		  x"91"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9016" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA ($04),Y
-		  x"04"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9017" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"91"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901E" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA ($04),Y
+		  x"04"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901F" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
 		  
---		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9016" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
---		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9017" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else	-- NOP
+--		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901E" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+--		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901F" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else	-- NOP
 		  
-		  x"88"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9018" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- DEY
-		  x"C0"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9019" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- CPY #$FD
-		  x"FD"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"D0"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901B" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- BNE loop2
-		  x"F7"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901C" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"CE"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901D" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- DEC $0005
-		  x"05"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901E" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"901F" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
-		  x"CA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9020" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- DEX
-		  x"10"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9021" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- BPL loop start
-		  x"EE"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9022" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  
-		  
-		  
-		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9023" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
-		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9024" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
-		  
-		  x"18"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9025" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- CLC
-		  x"90"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9026" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- BCC to this line
-		  x"FD"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9027" and RW = '1' and savestate_state = SAVING) else 
-		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9027" and RW = '1' and (savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else                              -- or to the next line
-		  
-		  
-		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9028" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
-		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9029" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  x"88"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9020" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- DEY
+		  x"C0"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9021" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- CPY #$FF
+		  x"FF"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9022" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"D0"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9023" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- BNE loop2
+		  x"F7"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9024" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"CE"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9025" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- DEC $0005
+		  x"05"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9026" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9027" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"CA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9028" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- DEX
+		  x"10"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9029" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- BPL loop start
+		  x"EE"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  
 		  
 		  
-		  x"40"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- RTI
+		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902B" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902C" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  
+		  x"18"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902D" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- CLC
+		  x"90"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902E" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- BCC to this line
+		  x"FE"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902F" and RW = '1' and savestate_state = SAVING) else 
+		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"902F" and RW = '1' and (savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else                              -- or to the next line
+		  
+		  
+		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9030" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9031" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  
+		  x"AD"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9032" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- LDA $0778
+		  x"78"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9033" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"07"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9034" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"09"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9035" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- ORA #$80
+		  x"80"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9036" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"8D"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9037" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- STA $2000
+		  x"00"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9038" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  x"20"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9039" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else
+		  
+		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"903A" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  x"EA"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"903B" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- NOP
+		  
+		  x"40"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"903C" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- RTI
 --		  
 --		  x"40"      when (injecting = '1' and not CONSOLE_CE & ADDR = x"9023" and RW = '1' and (savestate_state = SAVING or savestate_state = SENDING or (savestate_state = WAITFINISH1 or savestate_state = WAITFINISH2))) else  -- RTI
 --		  
